@@ -16,8 +16,9 @@ const getAllTours = async (req, res) => {
 
 // POST /tours
 const createTour = async (req, res) => {
+  const user_id = req.user._id;
   try {
-    const newTour = await Tour.create({ ...req.body });
+    const newTour = await Tour.create({ ...req.body, user_id });
     res.status(201).json(newTour);
   } catch (error) {
     res.status(400).json({ message: "Failed to create tour", error: error.message });
