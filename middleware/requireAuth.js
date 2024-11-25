@@ -9,16 +9,19 @@ const requireAuth = async (req, res, next) => {
     return res.status(401).json({ error: "Authorization token required" });
   }
 
-//   console.log(authorization);
-//   console.log(authorization.split(" "));
-//   console.log(authorization.split(" ")[0]);
-//   console.log(authorization.split(" ")[1]);
+  // console.log(authorization);
+  // console.log(authorization.split(" "));
+  // console.log(authorization.split(" ")[0]);
+  // console.log(authorization.split(" ")[1]);
 
   const token = authorization.split(" ")[1];
 
   try {
     const { _id } = jwt.verify(token, process.env.SECRET);
 
+    /* This line ensures that the authenticated user's _id is available in req.user for further processing. 
+    By using .select("_id"), it minimizes the amount of data fetched, which can improve performance and security.
+    */
     req.user = await User.findOne({ _id }).select("_id");
     next();
   } catch (error) {
